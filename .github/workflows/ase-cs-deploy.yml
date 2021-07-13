@@ -26,5 +26,6 @@ jobs:
         with:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
           scope: subscription
+          region: westus2
           template: ./deployment/bicep/main.bicep
           parameters: ./deployment/bicep/main.parameters.json
