@@ -40,6 +40,7 @@ jobs:
         with:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
           scope: subscription
+          deploymentName: ${{ github.event.inputs.enterpriseScaleAppPrefix }}
           region: ${{ github.event.inputs.location }}
           template: ./deployment/bicep/main.bicep
           parameters: workloadName=${{ github.event.inputs.enterpriseScaleAppPrefix }} environment=${{ github.event.inputs.envName }}
