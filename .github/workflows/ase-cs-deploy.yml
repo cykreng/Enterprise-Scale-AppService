@@ -13,10 +13,10 @@ on:
       envName:
         description: "Select Environment(dev/uat/prod)"
         required: true
-  push:
-    branches:
-    - main
-  pull_request:
+  # push:
+  #   branches:
+  #   - main
+  # pull_request:
 
 jobs:
 
@@ -38,6 +38,6 @@ jobs:
         with:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
           scope: subscription
-          region: westeurope
+          region: ${{ github.event.inputs.location }}
           template: ./deployment/bicep/main.bicep
-          parameters: workloadName=${{ github.event.inputs.enterpriseScaleAppPrefix }} location=${{ github.event.inputs.location }} environment=${{ github.event.inputs.envName }}
+          parameters: workloadName=${{ github.event.inputs.enterpriseScaleAppPrefix }} environment=${{ github.event.inputs.envName }}
