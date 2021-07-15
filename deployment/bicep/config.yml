@@ -1,4 +1,4 @@
-AZURE_LOCATION: "westus2"
+AZURE_LOCATION: "westeurope"
 RESOURCE_NAME_PREFIX: "ase-cs"
 ENVIRONMENT_TAG: "dev"
-DEPLOYMENT_NAME: "test"
+DEPLOYMENT_NAME: "test-we"
