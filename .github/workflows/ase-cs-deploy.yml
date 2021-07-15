@@ -1,13 +1,25 @@
 name: 'AzureBicepDeploy'
- 
+
 on:
+  workflow_dispatch:
+    inputs:
+      enterpriseScaleAppPrefix:
+        description: "Enter App Prefix"
+        required: true
+      location:
+        description: "Enter Location(centralus)"
+        required: true
+        default: "australiaeast"
+      envName:
+        description: "Select Environment(dev/uat/prod)"
+        required: true
   push:
     branches:
     - main
   pull_request:
- 
+
 jobs:
- 
+
   build-and-deploy:
       runs-on: ubuntu-latest
       steps:
@@ -28,4 +40,4 @@ jobs:
           scope: subscription
           region: westeurope
           template: ./deployment/bicep/main.bicep
-          parameters: ./deployment/bicep/main.parameters.json
+          parameters: workloadName=${{ github.event.inputs.enterpriseScaleAppPrefix }} location=${{ github.event.inputs.location }} environment=${{ github.event.inputs.envName }}
