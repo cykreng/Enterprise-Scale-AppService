@@ -1,4 +1,4 @@
-name: 'AzureBicepDeploy'
+name: AzureASEDeploy
 
 on:
   workflow_dispatch:
@@ -6,6 +6,7 @@ on:
       enterpriseScaleAppPrefix:
         description: "Enter App Prefix"
         required: true
+        default: "x15"
       location:
         description: "Enter Location(centralus)"
         required: true
@@ -13,6 +14,7 @@ on:
       envName:
         description: "Select Environment(dev/uat/prod)"
         required: true
+        default: "dev"
   # push:
   #   branches:
   #   - main
