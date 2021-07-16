@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
       "workloadName": {
-        "value": "ase-cs"
+        "value": "asev3-cs"
       },
       "environment": {
         "value": "prod"
