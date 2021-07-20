@@ -23,6 +23,11 @@ param location string
 ])
 param internalLoadBalancingMode string = 'Web, Publishing'
 
+@description('Requirements of ASE Subnet')
+param aseSubnetName string
+@description('Requirements of ASE Subnet')
+param aseSubnetId string
+
 @description('The number of workers to be deployed in the worker pool')
 param numberOfWorkers int = 1
 
@@ -38,8 +43,6 @@ param workerPool string = '1'
 var resourceSuffix = '${workloadName}-${environment}-${location}-001'
 var aseName = 'ase-${resourceSuffix}' // NOTE : ASE name cannot be more than 37 characters
 var appServicePlanName = 'asp-${resourceSuffix}'
-var vnetName = 'vnet-${resourceSuffix}'
-var subnetName = 'snet-${resourceSuffix}'
 
 // Resources
 resource virtualNetwork 'Microsoft.Network/virtualNetworks@2021-02-01' = {
@@ -77,8 +80,8 @@ resource ase 'Microsoft.Web/hostingEnvironments@2020-12-01' = {
     internalLoadBalancingMode: internalLoadBalancingMode
     // zoneRedundant: true -- not currently supported in bicep
     virtualNetwork: {
-      id: subnet.id
-      subnet: subnet.name
+      id: aseSubnetId
+      subnet: aseSubnetName
     }
   }
 }
