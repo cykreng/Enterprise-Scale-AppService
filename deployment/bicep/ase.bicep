@@ -69,7 +69,7 @@ resource subnet 'Microsoft.Network/virtualNetworks/subnets@2021-02-01' = {
   }
 }
 
-resource ase 'Microsoft.Web/hostingEnvironments@2021-01-01' = {
+resource ase 'Microsoft.Web/hostingEnvironments@2020-12-01' = {
   name: aseName
   location: location
   kind: 'ASEV3'
