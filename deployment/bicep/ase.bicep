@@ -45,7 +45,34 @@ var aseName = 'ase-${resourceSuffix}' // NOTE : ASE name cannot be more than 37 
 var appServicePlanName = 'asp-${resourceSuffix}'
 
 // Resources
-resource ase 'Microsoft.Web/hostingEnvironments@2021-01-01' = {
+resource virtualNetwork 'Microsoft.Network/virtualNetworks@2021-02-01' = {
+  name: vnetName
+  location: location
+  properties: {
+    addressSpace: {
+      addressPrefixes: [
+        '10.0.0.0/16'
+      ]
+    }
+  }
+}
+
+resource subnet 'Microsoft.Network/virtualNetworks/subnets@2021-02-01' = {
+  name: '${virtualNetwork.name}/${subnetName}'
+  properties: {
+    addressPrefix: '10.0.1.0/24'
+    delegations: [
+      {
+        name: '${aseName}-delegation'
+        properties: {
+          serviceName: 'Microsoft.Web/hostingEnvironments'
+        }
+      }
+    ]
+  }
+}
+
+resource ase 'Microsoft.Web/hostingEnvironments@2020-12-01' = {
   name: aseName
   location: location
   kind: 'ASEV3'
