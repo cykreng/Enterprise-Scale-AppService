@@ -22,10 +22,6 @@
         },
         "CICDAgentType": {
             "value": "azuredevops OR github OR none"
-        },
-        "aseLocation": {
-            "value": "West Europe"
         }
-
     }
 }
