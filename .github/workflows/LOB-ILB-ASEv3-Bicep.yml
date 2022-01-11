@@ -94,11 +94,11 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: ase-arm
-          path: ase-arm.json
+          path: /reference-implementations/LOB-ILB-ASEv3/bicep/ase-arm.json
           retention-days: 2
 
       - name: local path
         run: pwd
           
       - name: less file
-        run: less ase-arm.json
+        run: less /reference-implementations/LOB-ILB-ASEv3/bicep/ase-arm.json
