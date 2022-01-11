@@ -95,3 +95,10 @@ jobs:
         with:
           name: ase-arm
           path: ase-arm.json
+          retention-days: 2
+
+      - name: local path
+        run: pwd
+          
+      - name: less file
+        run: less ase-arm.json
