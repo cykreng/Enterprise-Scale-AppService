@@ -82,7 +82,10 @@ jobs:
 
       - name: Export ARM template
         working-directory: ./reference-implementations/LOB-ILB-ASEv3/bicep
-        run : az bicep build --file main.bicep --outfile ase-arm.json
+        run : |
+          pwd
+          az bicep build --file main.bicep --outfile ase-arm.json
+          ls -al
         # run: |
         #     az build sub validate \
         #       --location ${{ fromJson(env.config).AZURE_LOCATION }} \
@@ -96,9 +99,3 @@ jobs:
           name: ase-arm
           path: /reference-implementations/LOB-ILB-ASEv3/bicep/ase-arm.json
           retention-days: 2
-
-      - name: local path
-        run: pwd
-          
-      - name: less file
-        run: less /reference-implementations/LOB-ILB-ASEv3/bicep/ase-arm.json
