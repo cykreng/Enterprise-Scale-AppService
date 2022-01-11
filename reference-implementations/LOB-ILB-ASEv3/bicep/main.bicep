@@ -68,45 +68,46 @@ module networking 'networking.bicep' = {
   }
 }
 
-// Get networking resource outputs
-var jumpboxSubnetId = networking.outputs.jumpBoxSubnetId
-var CICDAgentSubnetId = networking.outputs.CICDAgentSubnetId
 
-// Create shared resources
-module shared './shared/shared.bicep' = {  
-  dependsOn: [
-    networking
-  ]
-  name: 'sharedresources'
-  scope: resourceGroup(sharedResourceGroup.name)
-  params: {
-    accountName: accountName
-    CICDAgentSubnetId: CICDAgentSubnetId
-    CICDAgentType: CICDAgentType
-    environment: environment
-    jumpboxSubnetId: jumpboxSubnetId
-    location: location
-    personalAccessToken: personalAccessToken
-    resourceGroupName: sharedResourceGroup.name
-    resourceSuffix: resourceSuffix
-    vmPassword: vmPassword
-    vmUsername: vmUsername
-  }
-}
+// // Get networking resource outputs
+// var jumpboxSubnetId = networking.outputs.jumpBoxSubnetId
+// var CICDAgentSubnetId = networking.outputs.CICDAgentSubnetId
 
-// Create ASE resources
-module ase 'ase.bicep' = {
-  dependsOn: [
-    networking
-    shared
-  ]
-  scope: resourceGroup(aseResourceGroup.name)
-  name: 'aseresources'
-  params: {
-    vnetId: networking.outputs.spokeVNetId
-    aseSubnetId: networking.outputs.aseSubnetId
-    aseSubnetName: networking.outputs.aseSubnetName
-    location: location
-    resourceSuffix: resourceSuffix
-  }
-}
+// // Create shared resources
+// module shared './shared/shared.bicep' = {  
+//   dependsOn: [
+//     networking
+//   ]
+//   name: 'sharedresources'
+//   scope: resourceGroup(sharedResourceGroup.name)
+//   params: {
+//     accountName: accountName
+//     CICDAgentSubnetId: CICDAgentSubnetId
+//     CICDAgentType: CICDAgentType
+//     environment: environment
+//     jumpboxSubnetId: jumpboxSubnetId
+//     location: location
+//     personalAccessToken: personalAccessToken
+//     resourceGroupName: sharedResourceGroup.name
+//     resourceSuffix: resourceSuffix
+//     vmPassword: vmPassword
+//     vmUsername: vmUsername
+//   }
+// }
+
+// // Create ASE resources
+// module ase 'ase.bicep' = {
+//   dependsOn: [
+//     networking
+//     shared
+//   ]
+//   scope: resourceGroup(aseResourceGroup.name)
+//   name: 'aseresources'
+//   params: {
+//     vnetId: networking.outputs.spokeVNetId
+//     aseSubnetId: networking.outputs.aseSubnetId
+//     aseSubnetName: networking.outputs.aseSubnetName
+//     location: location
+//     resourceSuffix: resourceSuffix
+//   }
+// }
