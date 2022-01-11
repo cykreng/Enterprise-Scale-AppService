@@ -13,11 +13,11 @@ param workloadName string
 ])
 param environment string
 
-@description('The user name to be used as the Administrator for all VMs created by this deployment')
-param vmUsername string
+// @description('The user name to be used as the Administrator for all VMs created by this deployment')
+// param vmUsername string
 
-@description('The password for the Administrator user for all VMs created by this deployment')
-param vmPassword string
+// @description('The password for the Administrator user for all VMs created by this deployment')
+// param vmPassword string
 
 @description('The CI/CD platform to be used, and for which an agent will be configured for the ASE deployment. Specify \'none\' if no agent needed')
 @allowed([
@@ -27,12 +27,12 @@ param vmPassword string
 ])
 param CICDAgentType string
 
-@description('The Azure DevOps or GitHub account name to be used when configuring the CI/CD agent, in the format https://dev.azure.com/ORGNAME OR github.com/ORGUSERNAME OR none')
-param accountName string
+// @description('The Azure DevOps or GitHub account name to be used when configuring the CI/CD agent, in the format https://dev.azure.com/ORGNAME OR github.com/ORGUSERNAME OR none')
+// param accountName string
 
-@description('The Azure DevOps or GitHub personal access token (PAT) used to setup the CI/CD agent')
-@secure()
-param personalAccessToken string
+// @description('The Azure DevOps or GitHub personal access token (PAT) used to setup the CI/CD agent')
+// @secure()
+// param personalAccessToken string
 
 // Variables
 var location = deployment().location
