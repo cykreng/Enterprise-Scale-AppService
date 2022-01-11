@@ -94,4 +94,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: ase-arm
-          path: output/test/ase-arm.json
+          path: ase-arm.json
