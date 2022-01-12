@@ -84,7 +84,7 @@ jobs:
         working-directory: ./reference-implementations/LOB-ILB-ASEv3/bicep
         run : |
           pwd
-          az bicep build --file main.bicep --outfile ase-arm.json
+          az bicep build --file main.bicep --outfile ase-arm-v${{github.run_number}}.json
           ls -al
         # run: |
         #     az build sub validate \
@@ -93,12 +93,12 @@ jobs:
         #       CICDAgentType=${{ fromJson(env.config).CICD_AGENT_TYPE}} \
         #       --template-file main.bicep
 
-      - name: Archive code coverage results
-        uses: actions/upload-artifact@v2
-        with:
-          name: ase-arm
-          path: reference-implementations/LOB-ILB-ASEv3/bicep/ase-arm.json
-          retention-days: 2
+      # - name: Archive code coverage results
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: ase-arm
+      #     path: reference-implementations/LOB-ILB-ASEv3/bicep/ase-arm.json
+      #     retention-days: 2
 
 
       - name: Commit changes
@@ -108,5 +108,5 @@ jobs:
           author_email: cenkc@microsoft.com
           message: 'ARM template updated'
           cwd: 'reference-implementations/LOB-ILB-ASEv3/bicep/'
-          branch: 'arm/v-${{github.run_number}}'
-          add: 'ase-arm.json'
+          branch: 'arm'
+          add: 'ase-arm-v${{github.run_number}}.json'
