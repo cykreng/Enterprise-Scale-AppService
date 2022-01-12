@@ -82,10 +82,8 @@ jobs:
 
       - name: Export ARM template
         working-directory: ./reference-implementations/LOB-ILB-ASEv3/bicep
-        run : |
-          pwd
-          az bicep build --file main.bicep --outfile ase-arm-v${{github.run_number}}.json
-          ls -al
+        # run : az bicep build --file main.bicep --outfile ase-arm-v${{github.run_number}}.json
+        run: az bicep build --file main.bicep --outfile ase-arm.json
         # run: |
         #     az build sub validate \
         #       --location ${{ fromJson(env.config).AZURE_LOCATION }} \
@@ -108,5 +106,6 @@ jobs:
           author_email: cenkc@microsoft.com
           message: 'ARM template updated'
           cwd: 'reference-implementations/LOB-ILB-ASEv3/arm/'
-          branch: 'arm'
-          add: 'ase-arm-v${{github.run_number}}.json'
+          branch: 'arm/v${{github.run_number}}'
+          branch_mode: create
+          add: 'ase-arm.json'
