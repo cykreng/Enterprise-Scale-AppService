@@ -108,6 +108,6 @@ jobs:
           author_email: cenkc@microsoft.com
           message: 'ARM template updated'
           cwd: 'reference-implementations/LOB-ILB-ASEv3/bicep/'
-          branch_mode: create
-          branch: 'arm/v-${{github.run_number}}'
+          branch_mode: 'create'
+          branch: 'arm-${{github.run_number}}'
           add: 'ase-arm.json'
