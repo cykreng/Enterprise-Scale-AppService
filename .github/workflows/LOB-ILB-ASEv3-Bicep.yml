@@ -97,5 +97,5 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: ase-arm
-          path: ./reference-implementations/LOB-ILB-ASEv3/bicep/ase-arm.json
+          path: reference-implementations/LOB-ILB-ASEv3/bicep/ase-arm.json
           retention-days: 2
