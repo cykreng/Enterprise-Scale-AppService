@@ -99,3 +99,14 @@ jobs:
           name: ase-arm
           path: reference-implementations/LOB-ILB-ASEv3/bicep/ase-arm.json
           retention-days: 2
+
+
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v7
+        with:
+          author_name: ASE-Action
+          author_email: cenkc@microsoft.com
+          message: 'ARM template updated'
+          cwd: 'reference-implementations/LOB-ILB-ASEv3/bicep/'
+          branch: 'arm/v-${{github.run_number}}'
+          add: 'ase-arm.json'
