@@ -107,6 +107,6 @@ jobs:
           author_name: ASE-Action
           author_email: cenkc@microsoft.com
           message: 'ARM template updated'
-          cwd: 'reference-implementations/LOB-ILB-ASEv3/bicep/'
+          cwd: 'reference-implementations/LOB-ILB-ASEv3/arm/'
           branch: 'arm'
           add: 'ase-arm-v${{github.run_number}}.json'
