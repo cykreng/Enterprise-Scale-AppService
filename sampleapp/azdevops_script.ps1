@@ -18,6 +18,8 @@ $PipelineName='ASESampleAppPipeline'
 $PipelineDescription='ASESampleAppPipeline'
 $YmlPath='/sampleapp/azure-pipelines.yaml'
 
+# review this for non interactive
+# $env:AZURE_DEVOPS_EXT_PAT = 'xxxxxxxxxx'
 # right now this is interactive. You will need PAT with appropriate permissions
 az devops login --org $orgUrl
 
