@@ -1,9 +1,11 @@
 # Credit to Colin Dembovsky for this blog https://colinsalmcorner.com/az-devops-like-a-boss/ - much of the script below leverages that blog
 
+# Fill in the name
 $SERVICE_PRINCIPAL_NAME=''
 $SP_PASSWD=az ad sp create-for-rbac --name $SERVICE_PRINCIPAL_NAME --role Contributor --query password --output tsv
 $CLIENT_ID=az ad sp list --display-name $SERVICE_PRINCIPAL_NAME --query "[].appId" --output tsv
 
+# replace XXX with orgname
 $orgUrl='https://dev.azure.com/XXX'
 $ProjectName ='ASETest'
 $RepoName='ASELandingZone'
@@ -17,7 +19,7 @@ $PipelineName='ASESampleAppPipeline'
 $PipelineDescription='ASESampleAppPipeline'
 $YmlPath='/sampleapp/azure-pipelines.yaml'
 
-
+# right now this is interactive. You will need PAT with appropriate permissions
 az devops login --org $orgUrl
 
 az devops project create --org $orgUrl --name  $ProjectName 
@@ -36,7 +38,7 @@ az devops service-endpoint update --id $epId --enable-for-all true --org $orgUrl
 az pipelines create -p $ProjectName --org $orgUrl --name $PipelineName --description $PipelineDescription --repository $RepoName --repository-type tfsgit --branch main --skip-first-run --yml-path $YmlPath
 
 
-
+# go into devops org, and appropriate team project. Should have code, service connection and pipeline setup
 
 
 
