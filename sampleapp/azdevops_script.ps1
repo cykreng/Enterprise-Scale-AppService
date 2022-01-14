@@ -15,7 +15,7 @@ $SPNClientID =az ad sp list --display-name $SERVICE_PRINCIPAL_NAME --query "[].a
 $ServiceEndpointName='ASEServiceEndPoint'
 $PipelineName='ASESampleAppPipeline'
 $PipelineDescription='ASESampleAppPipeline'
-$YmlPath='sampleapp/azure-pipelines.yaml'
+$YmlPath='/sampleapp/azure-pipelines.yaml'
 
 
 az devops login --org $orgUrl
@@ -35,10 +35,8 @@ az devops service-endpoint update --id $epId --enable-for-all true --org $orgUrl
 
 az pipelines create -p $ProjectName --org $orgUrl --name $PipelineName --description $PipelineDescription --repository $RepoName --repository-type tfsgit --branch main --skip-first-run --yml-path $YmlPath
 
-az repos delete --name $RepoName -p $ProjectName --org $orgUrl
 
 
-$YmlPath='/sampleapp/azure-pipelines.yml'
-$PipelineName='ASESampleAppPipeline4'
-az pipelines create -p $ProjectName --org $orgUrl --name $PipelineName --description $PipelineDescription --repository $RepoName --repository-type tfsgit --branch main --skip-first-run --yml-path $YmlPath
+
+
 
