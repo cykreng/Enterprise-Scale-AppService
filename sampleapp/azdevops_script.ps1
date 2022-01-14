@@ -1,9 +1,8 @@
 # Credit to Colin Dembovsky for this blog https://colinsalmcorner.com/az-devops-like-a-boss/ - much of the script below leverages that blog
 
 # Fill in the name
-$SERVICE_PRINCIPAL_NAME=''
+$SERVICE_PRINCIPAL_NAME='azdevopsspname'
 $SP_PASSWD=az ad sp create-for-rbac --name $SERVICE_PRINCIPAL_NAME --role Contributor --query password --output tsv
-$CLIENT_ID=az ad sp list --display-name $SERVICE_PRINCIPAL_NAME --query "[].appId" --output tsv
 
 # replace XXX with orgname
 $orgUrl='https://dev.azure.com/XXX'
