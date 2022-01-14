@@ -1,3 +1,5 @@
+# Credit to Colin Dembovsky for this blog https://colinsalmcorner.com/az-devops-like-a-boss/ - much of the script below leverages that blog
+
 $SERVICE_PRINCIPAL_NAME=''
 $SP_PASSWD=az ad sp create-for-rbac --name $SERVICE_PRINCIPAL_NAME --role Contributor --query password --output tsv
 $CLIENT_ID=az ad sp list --display-name $SERVICE_PRINCIPAL_NAME --query "[].appId" --output tsv
