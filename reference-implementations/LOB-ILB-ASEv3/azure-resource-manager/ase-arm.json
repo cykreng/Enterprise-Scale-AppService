@@ -1,0 +1,371 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.4.1124.51302",
+      "templateHash": "13797243340003257100"
+    }
+  },
+  "parameters": {
+    "workloadName": {
+      "type": "string",
+      "metadata": {
+        "description": "A short name for the workload being deployed"
+      }
+    },
+    "environment": {
+      "type": "string",
+      "allowedValues": [
+        "dev",
+        "uat",
+        "prod",
+        "dr"
+      ],
+      "metadata": {
+        "description": "The environment for which the deployment is being executed"
+      }
+    },
+    "CICDAgentType": {
+      "type": "string",
+      "allowedValues": [
+        "github",
+        "azuredevops",
+        "none"
+      ],
+      "metadata": {
+        "description": "The CI/CD platform to be used, and for which an agent will be configured for the ASE deployment. Specify 'none' if no agent needed"
+      }
+    }
+  },
+  "variables": {
+    "location": "[deployment().location]",
+    "resourceSuffix": "[format('{0}-{1}-{2}-001', parameters('workloadName'), parameters('environment'), variables('location'))]",
+    "networkingResourceGroupName": "[format('rg-networking-{0}', variables('resourceSuffix'))]",
+    "sharedResourceGroupName": "[format('rg-shared-{0}', variables('resourceSuffix'))]",
+    "aseResourceGroupName": "[format('rg-ase-{0}', variables('resourceSuffix'))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/resourceGroups",
+      "apiVersion": "2021-04-01",
+      "name": "[variables('networkingResourceGroupName')]",
+      "location": "[variables('location')]"
+    },
+    {
+      "type": "Microsoft.Resources/resourceGroups",
+      "apiVersion": "2021-04-01",
+      "name": "[variables('aseResourceGroupName')]",
+      "location": "[variables('location')]"
+    },
+    {
+      "type": "Microsoft.Resources/resourceGroups",
+      "apiVersion": "2021-04-01",
+      "name": "[variables('sharedResourceGroupName')]",
+      "location": "[variables('location')]"
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2020-10-01",
+      "name": "networkingresources",
+      "resourceGroup": "[variables('networkingResourceGroupName')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "location": {
+            "value": "[variables('location')]"
+          },
+          "resourceSuffix": {
+            "value": "[variables('resourceSuffix')]"
+          },
+          "createCICDAgentSubnet": {
+            "value": "[if(equals(parameters('CICDAgentType'), 'none'), false(), true())]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.4.1124.51302",
+              "templateHash": "11806196031893887906"
+            }
+          },
+          "parameters": {
+            "location": {
+              "type": "string",
+              "metadata": {
+                "description": "Azure location to which the resources are to be deployed"
+              }
+            },
+            "resourceSuffix": {
+              "type": "string",
+              "metadata": {
+                "description": "Standardized suffix text to be added to resource names"
+              }
+            },
+            "createCICDAgentSubnet": {
+              "type": "bool",
+              "defaultValue": true,
+              "metadata": {
+                "description": "Indicator as to whether the CI/CD agent subnet should be created or not"
+              }
+            },
+            "hubVNetNameAddressPrefix": {
+              "type": "string",
+              "defaultValue": "10.0.0.0/16",
+              "metadata": {
+                "description": "CIDR prefix to use for Hub VNet"
+              }
+            },
+            "spokeVNetNameAddressPrefix": {
+              "type": "string",
+              "defaultValue": "10.1.0.0/16",
+              "metadata": {
+                "description": "CIDR prefix to use for Spoke VNet"
+              }
+            },
+            "bastionAddressPrefix": {
+              "type": "string",
+              "defaultValue": "10.0.1.0/24",
+              "metadata": {
+                "description": "CIDR prefix to use for Bastion VNet"
+              }
+            },
+            "CICDAgentNameAddressPrefix": {
+              "type": "string",
+              "defaultValue": "10.0.2.0/24",
+              "metadata": {
+                "description": "CIDR prefix to use CI/CD Agent VNet"
+              }
+            },
+            "jumpBoxAddressPrefix": {
+              "type": "string",
+              "defaultValue": "10.0.3.0/24",
+              "metadata": {
+                "description": "CIDR prefix to use for Jumpbox VNet"
+              }
+            },
+            "aseAddressPrefix": {
+              "type": "string",
+              "defaultValue": "10.1.1.0/24",
+              "metadata": {
+                "description": "CIDR prefix to use for ASE"
+              }
+            }
+          },
+          "variables": {
+            "bastionHostName": "[format('snet-basthost-{0}', parameters('resourceSuffix'))]",
+            "bastionHostPip": "[format('{0}-pip', variables('bastionHostName'))]",
+            "hubVNetName": "[format('vnet-hub-{0}', parameters('resourceSuffix'))]",
+            "spokeVNetName": "[format('vnet-spoke-{0}', parameters('resourceSuffix'))]",
+            "bastionSubnetName": "AzureBastionSubnet",
+            "CICDAgentSubnetName": "[format('snet-cicd-{0}', parameters('resourceSuffix'))]",
+            "jumpBoxSubnetName": "[format('snet-jbox-{0}', parameters('resourceSuffix'))]",
+            "aseSubnetName": "[format('snet-ase-{0}', parameters('resourceSuffix'))]"
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Network/virtualNetworks",
+              "apiVersion": "2021-02-01",
+              "name": "[variables('hubVNetName')]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "addressSpace": {
+                  "addressPrefixes": [
+                    "[parameters('hubVNetNameAddressPrefix')]"
+                  ]
+                },
+                "enableVmProtection": false,
+                "enableDdosProtection": false,
+                "subnets": [
+                  {
+                    "name": "[variables('bastionSubnetName')]",
+                    "properties": {
+                      "addressPrefix": "[parameters('bastionAddressPrefix')]"
+                    }
+                  },
+                  {
+                    "name": "[variables('jumpBoxSubnetName')]",
+                    "properties": {
+                      "addressPrefix": "[parameters('jumpBoxAddressPrefix')]"
+                    }
+                  },
+                  {
+                    "name": "[variables('CICDAgentSubnetName')]",
+                    "properties": {
+                      "addressPrefix": "[parameters('CICDAgentNameAddressPrefix')]"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "Microsoft.Network/virtualNetworks",
+              "apiVersion": "2021-02-01",
+              "name": "[variables('spokeVNetName')]",
+              "location": "[resourceGroup().location]",
+              "properties": {
+                "addressSpace": {
+                  "addressPrefixes": [
+                    "[parameters('spokeVNetNameAddressPrefix')]"
+                  ]
+                },
+                "enableVmProtection": false,
+                "enableDdosProtection": false,
+                "subnets": [
+                  {
+                    "name": "[variables('aseSubnetName')]",
+                    "properties": {
+                      "delegations": [
+                        {
+                          "name": "hostingEnvironment",
+                          "properties": {
+                            "serviceName": "Microsoft.Web/hostingEnvironments"
+                          }
+                        }
+                      ],
+                      "addressPrefix": "[parameters('aseAddressPrefix')]"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+              "apiVersion": "2021-02-01",
+              "name": "[format('{0}/{1}-{2}', variables('hubVNetName'), variables('hubVNetName'), variables('spokeVNetName'))]",
+              "properties": {
+                "allowVirtualNetworkAccess": true,
+                "allowForwardedTraffic": false,
+                "allowGatewayTransit": false,
+                "useRemoteGateways": false,
+                "remoteVirtualNetwork": {
+                  "id": "[resourceId('Microsoft.Network/virtualNetworks', variables('spokeVNetName'))]"
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('hubVNetName'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('spokeVNetName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+              "apiVersion": "2021-02-01",
+              "name": "[format('{0}/{1}-{2}', variables('spokeVNetName'), variables('spokeVNetName'), variables('hubVNetName'))]",
+              "properties": {
+                "allowVirtualNetworkAccess": true,
+                "allowForwardedTraffic": false,
+                "allowGatewayTransit": false,
+                "useRemoteGateways": false,
+                "remoteVirtualNetwork": {
+                  "id": "[resourceId('Microsoft.Network/virtualNetworks', variables('hubVNetName'))]"
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('hubVNetName'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('spokeVNetName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.Network/publicIPAddresses",
+              "apiVersion": "2020-06-01",
+              "name": "[variables('bastionHostPip')]",
+              "location": "[parameters('location')]",
+              "sku": {
+                "name": "Standard"
+              },
+              "properties": {
+                "publicIPAllocationMethod": "Static"
+              }
+            },
+            {
+              "type": "Microsoft.Network/bastionHosts",
+              "apiVersion": "2020-06-01",
+              "name": "[variables('bastionHostName')]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "ipConfigurations": [
+                  {
+                    "name": "IpConf",
+                    "properties": {
+                      "publicIPAddress": {
+                        "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('bastionHostPip'))]"
+                      },
+                      "subnet": {
+                        "id": "[format('{0}/subnets/{1}', resourceId('Microsoft.Network/virtualNetworks', variables('hubVNetName')), variables('bastionSubnetName'))]"
+                      }
+                    }
+                  }
+                ]
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', variables('bastionHostPip'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('hubVNetName'))]",
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('spokeVNetName'))]"
+              ]
+            }
+          ],
+          "outputs": {
+            "hubVNetName": {
+              "type": "string",
+              "value": "[variables('hubVNetName')]"
+            },
+            "spokeVNetName": {
+              "type": "string",
+              "value": "[variables('spokeVNetName')]"
+            },
+            "hubVNetId": {
+              "type": "string",
+              "value": "[resourceId('Microsoft.Network/virtualNetworks', variables('hubVNetName'))]"
+            },
+            "spokeVNetId": {
+              "type": "string",
+              "value": "[resourceId('Microsoft.Network/virtualNetworks', variables('spokeVNetName'))]"
+            },
+            "bastionSubnetName": {
+              "type": "string",
+              "value": "[variables('bastionSubnetName')]"
+            },
+            "CICDAgentSubnetName": {
+              "type": "string",
+              "value": "[if(parameters('createCICDAgentSubnet'), variables('CICDAgentSubnetName'), '')]"
+            },
+            "jumpBoxSubnetName": {
+              "type": "string",
+              "value": "[variables('jumpBoxSubnetName')]"
+            },
+            "aseSubnetName": {
+              "type": "string",
+              "value": "[variables('aseSubnetName')]"
+            },
+            "bastionSubnetId": {
+              "type": "string",
+              "value": "[format('{0}/subnets/{1}', resourceId('Microsoft.Network/virtualNetworks', variables('hubVNetName')), variables('bastionSubnetName'))]"
+            },
+            "CICDAgentSubnetId": {
+              "type": "string",
+              "value": "[if(parameters('createCICDAgentSubnet'), format('{0}/subnets/{1}', resourceId('Microsoft.Network/virtualNetworks', variables('hubVNetName')), variables('CICDAgentSubnetName')), '')]"
+            },
+            "jumpBoxSubnetId": {
+              "type": "string",
+              "value": "[format('{0}/subnets/{1}', resourceId('Microsoft.Network/virtualNetworks', variables('hubVNetName')), variables('jumpBoxSubnetName'))]"
+            },
+            "aseSubnetId": {
+              "type": "string",
+              "value": "[format('{0}/subnets/{1}', resourceId('Microsoft.Network/virtualNetworks', variables('spokeVNetName')), variables('aseSubnetName'))]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[subscriptionResourceId('Microsoft.Resources/resourceGroups', variables('networkingResourceGroupName'))]"
+      ]
+    }
+  ]
+}
