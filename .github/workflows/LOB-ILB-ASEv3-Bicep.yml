@@ -84,7 +84,7 @@ jobs:
         working-directory: ./reference-implementations/LOB-ILB-ASEv3/bicep
         run : |
           pwd
-          az bicep build --file main.bicep --outfile ase-arm.json
+          az bicep build --file main.bicep --outfile ../ARM/ase-arm.json
           ls -al
         # run: |
         #     az build sub validate \
@@ -98,7 +98,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: ase-arm
-          path: reference-implementations/LOB-ILB-ASEv3/bicep/ase-arm.json
+          path: reference-implementations/LOB-ILB-ASEv3/ARM/ase-arm.json
           retention-days: 2
 
       # Committing and pushing exported ARM template to the same repo.
