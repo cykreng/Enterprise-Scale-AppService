@@ -93,6 +93,7 @@ jobs:
         #       CICDAgentType=${{ fromJson(env.config).CICD_AGENT_TYPE}} \
         #       --template-file main.bicep
 
+      # Uploading exported ARM template to GitHub's artifact 
       - name: Archive code coverage results
         uses: actions/upload-artifact@v2
         with:
@@ -100,7 +101,7 @@ jobs:
           path: reference-implementations/LOB-ILB-ASEv3/bicep/ase-arm.json
           retention-days: 2
 
-
+      # Committing and pushing exported ARM template to the same repo.
       - name: Commit changes
         uses: EndBug/add-and-commit@v7
         with:
@@ -108,6 +109,6 @@ jobs:
           author_email: cenkc@microsoft.com
           message: 'ARM template updated'
           cwd: 'reference-implementations/LOB-ILB-ASEv3/bicep/'
-          branch_mode: 'create'
+          branch_mode: create
           branch: 'arm-${{github.run_number}}'
           add: 'ase-arm.json'
