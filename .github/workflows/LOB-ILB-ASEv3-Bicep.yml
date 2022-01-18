@@ -5,7 +5,7 @@ on:
   
   push:
     branches:
-    - 'cenk/arm'
+    - main
 
   pull_request:
  
@@ -79,9 +79,9 @@ jobs:
             vmUsername=${{ fromJson(env.config).VM_USERNAME }} vmPassword=${{ secrets.VM_PW }} 
             accountName=${{ secrets.ACCOUNT_NAME  }} personalAccessToken=${{ secrets.PAT }} CICDAgentType=${{ fromJson(env.config).CICD_AGENT_TYPE}}
 
-
   Generate-ARM:
     name: "Generate ARM Template"
+    needs: build-and-deploy
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the code
