@@ -86,7 +86,7 @@ jobs:
         working-directory: ./reference-implementations/LOB-ILB-ASEv3/bicep
         run : |
           pwd
-          az bicep build --file main.bicep --outfile ../ARM/ase-arm.json
+          az bicep build --file main.bicep --outfile ../azure-resource-manager/ase-arm.json
           ls -al
         # run: |
         #     az build sub validate \
@@ -100,7 +100,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: ase-arm
-          path: reference-implementations/LOB-ILB-ASEv3/ARM/ase-arm.json
+          path: reference-implementations/LOB-ILB-ASEv3/azure-resource-manager/ase-arm.json
           retention-days: 2
 
       # Committing and pushing exported ARM template to the same repo.
@@ -110,7 +110,7 @@ jobs:
           author_name: ASE-Action
           author_email: cenkc@microsoft.com
           message: 'ARM template updated'
-          cwd: 'reference-implementations/LOB-ILB-ASEv3/ARM/'
+          cwd: 'reference-implementations/LOB-ILB-ASEv3/azure-resource-manager/'
           branch_mode: create
           branch: 'arm-${{github.run_number}}'
           add: 'ase-arm.json'
